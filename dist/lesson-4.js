@@ -6,71 +6,52 @@ if (button) {
     });
 }
 ;
-class myClass {
-    protectMethod() {
-        return 'Something';
+class Key {
+    constructor() {
+        this.signature = Math.random();
     }
     ;
-    myPublicMethod() {
-        return this.protectMethod();
-    }
-}
-class Animal {
-    say() {
-        console.log("Nothing to say");
+    getSignature() {
+        return this.signature;
     }
 }
 ;
-class Cat extends Animal {
-    say() {
-        console.log("Meow");
+class Person {
+    constructor(key) {
+        this.key = key;
+    }
+    getKey() {
+        return this.key;
     }
 }
-const cat = new Cat();
-cat.say();
 class House {
-    constructor(type, street) {
-        this.type = type;
-        this.street = street;
+    constructor(key) {
+        this.key = key;
+        this.door = false;
         this.tenants = [];
-        this.street = street;
-        this.type = type;
     }
-    ;
-    showAdress() {
-        console.log('Address:' + this.street);
-    }
-    ;
-    showType() {
-        console.log(`House Type: ${this.type}`);
-    }
-    addTenant(tenant) {
-        this.tenants.push(tenant);
-    }
-    ;
-    showTenants() {
-        console.log(this.tenants);
+    comeIn(person) {
+        if (!this.door) {
+            throw new Error('Door is close');
+        }
+        this.tenants.push(person);
+        console.log("Person inside");
     }
 }
-;
-const house = new House('stone', 'Middle-earth');
-class StoneHouse extends House {
-    constructor(street, generalTenant) {
-        super('stone', street);
-        this.chargeOfTheHouse = generalTenant;
-        this.addTenant(generalTenant);
-    }
-    ;
-    showTenants() {
-        console.log('General: ' + this.chargeOfTheHouse);
-        super.showTenants();
+class MyHouse extends House {
+    openDoor(key) {
+        if (key.getSignature() !== this.key.getSignature()) {
+            throw new Error('Key to another door');
+        }
+        return this.door = true;
     }
 }
-;
-const stoneHouse = new StoneHouse('Stone-world', 'Max');
-stoneHouse.addTenant('Anton');
-stoneHouse.addTenant('Nikita');
-stoneHouse.showTenants();
-stoneHouse.showType();
-stoneHouse.showAdress();
+const key = new Key();
+const myHouse = new MyHouse(key);
+const person1 = new Person(key);
+const person2 = new Person(key);
+myHouse.openDoor(person1.getKey());
+myHouse.openDoor(person2.getKey());
+myHouse.comeIn(person1);
+myHouse.comeIn(person2);
 //# sourceMappingURL=lesson-4.js.map
